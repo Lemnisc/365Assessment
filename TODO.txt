@@ -1,0 +1,29 @@
+TODO Set up database
+    Tables:
+        Users
+        Files
+
+TODO Set up account system backend
+    Auth
+        Register
+        Login
+        (password reset &c out of scope)
+
+TODO Set up account system frontend
+    Auth
+        Register
+        Login
+
+TODO Set up files system backend
+    C
+    R
+    U
+    D
+
+TODO Set up files system frontend
+    C
+    R
+    U
+    D
+
+TODO Improve everything :D
