@@ -1,3 +1,9 @@
+<?php
+
+require './config.php'
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,15 +11,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>365 Assessment</title>
+    <title><?= $config['title'] ?> Index</title>
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 
 <body>
 
     <h1>Index</h1>
+    <?= $config['site_root'] ?>
     <div id="vue">
-        <users-table users = '<?=json_encode($users)?>'></users-table>
+        <users-table users='<?= json_encode($users) ?>'></users-table>
     </div>
 
 </body>
@@ -21,7 +28,9 @@
 <script>
     const app = Vue.createApp({})
     app.component('users-table', {
-        props: {users: JSON},
+        props: {
+            users: JSON
+        },
         template: `
         <table>
             <thead>
