@@ -13,14 +13,25 @@
 
     <h1>Bestanden</h1>
     <h1><a href="/auth/logout.php">Log out</a></h1>
+
+    <form method="post" action="files.php" enctype="multipart/form-data">
+        <label for="file-upload">Upload een nieuw bestand:</label>
+        <input type="file" id="file-upload" name="file-upload" accept=".csv">
+        <button>Uploaden</button>
+    </form>
+
+
     <div id="vue">
         <files-table files='<?= json_encode($files) ?>'></files-table>
-        <file-table selectedfile='<?=json_encode($selectedFile) ?>'></file-table>
+        <file-table selectedfile='<?= json_encode($selectedFile) ?>'></file-table>
     </div>
 </body>
 
 <script>
-    const {createApp, h} = Vue
+    const {
+        createApp,
+        h
+    } = Vue
     const app = createApp({})
     app.component('files-table', {
         props: {
@@ -28,7 +39,6 @@
         },
 
         template: `
-        <button>Upload nieuw bestand</button>
         <table>
             <thead>
                 <tr>
