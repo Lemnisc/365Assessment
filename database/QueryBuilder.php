@@ -24,7 +24,7 @@ class QueryBuilder
             $statement = $this->pdo->prepare($sql);
             $statement->execute($parameters);
        } catch (Exception $error) {
-           die('oops');
+           die('Could not insert into database. Error: ' . $error->getMessage());
        }
     }
 }
