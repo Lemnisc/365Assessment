@@ -5,6 +5,7 @@ $site_root = $config['site_root'];
 $database = require $site_root . '\bootstrap.php';
 $errors = [];
 $oldInput = [];
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST['email']))) {
         $errors['email'] = "Enter an email address.";
@@ -22,8 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!count($errors)) {
         $app['database']->insert('users', [
             'email' => $_POST['email'],
-            'password' => $_POST['password']
+            'password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
         ]);
+        header("location: /auth/login.php");
     }
 }
+
 require  $site_root . '\.\views\register.view.php';

@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <div id="vue">
         <!-- <input v-model='form.email' placeholder='enter email address...' />
         <input v-model='form.password' placeholder='enter password...' />
