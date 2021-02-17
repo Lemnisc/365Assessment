@@ -1,18 +1,26 @@
 TODO Set up database
     Tables:
-        Users
+*       Users
         Files
 
 TODO Set up account system backend
     Auth
-        Register
-        Login
+       Register
+*           Basic
+            Good errors
+       Login
+*           Basic
+            Good errors
         (password reset &c out of scope)
 
 TODO Set up account system frontend
     Auth
         Register
+*           Basic
+            Pretty
         Login
+*           Basic
+            Pretty
 
 TODO Set up files system backend
     C

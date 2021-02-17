@@ -7,11 +7,24 @@ class QueryBuilder
     {
         $this->pdo = $pdo;
     }
+
     public function selectAll($table)
     {
         $statement = $this->pdo->prepare("select * from {$table}");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_CLASS);
+    }
+
+    public function selectColumns($table, $columns)
+    {
+        $sql = sprintf('select %s from %s', implode(', ', array_values($columns)), $table);
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_CLASS);
+        } catch (Exception $error) {
+            die('Could not select from database. Error: ' . $error->getMessage());
+        }
     }
 
     public function insert($table, $parameters)
