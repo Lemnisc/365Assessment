@@ -59,6 +59,9 @@ class File
         if (isset($_REQUEST['delete'])) {
             $this->doDelete($_REQUEST['delete']);
         }
+        if (isset($_REQUEST['edit'])) {
+            $this->getFile($_REQUEST['edit']);
+        }
     }
 
     public function doDownload($id)

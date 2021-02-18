@@ -52,13 +52,13 @@
             <tbody>
                 <tr v-for="file in JSON.parse(files)">
                     <td>
-                        <a :href="'/files.php?file=' + file.file_id">
-                            {{file.filename}}</a>
+                            {{file.filename}}
                     </td>
                     <td>
                         <form method="POST">
-                            <button :value="file.file_id" name=download>Download</button>
-                            <button :value="file.file_id" name=delete>Verwijderen</button >
+                            <button :value="file.file_id" name=edit>Bewerken</button>
+                            <button :value="file.file_id" name=download>Downloaden</button>
+                            <button :value="file.file_id" name=delete>Verwijderen</button>
                         </form>
                     </td>
                 </tr>
