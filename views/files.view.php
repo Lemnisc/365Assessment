@@ -23,8 +23,8 @@
 
     <div id="vue">
         <files-table files='<?= json_encode($files) ?>'></files-table>
-        <div v-if="'<?=$file->selectedFile?>'!=''">
-        <file-table selectedfile='<?= json_encode($file->selectedFile) ?>'></file-table>
+        <div v-if="'<?= $file->selectedFile ?>'!=''">
+            <file-table selectedfile='<?= json_encode($file->selectedFile) ?>'></file-table>
         </div>
     </div>
 </body>
@@ -32,14 +32,12 @@
 <script>
     const {
         createApp,
-        
+
     } = Vue
     const app = createApp({})
     app.component('files-table', {
         props: {
             files: JSON
-        },
-        methods: {
         },
         template: `
         <table>
@@ -72,6 +70,19 @@
             selectedfile: JSON
         },
 
+        data() {
+            return {
+                editing: [],
+                form: JSON.parse(this.selectedfile),
+            }
+        },
+        methods: {
+            editCell(data) {
+                this.form = data;
+                console.log(this.form);
+            }
+        },
+        // <tr v-for="row in JSON.parse(selectedfile)" @click.prevent="editCell(JSON.parse(selectedfile))">
         template: `
         <table>
             <thead>
@@ -85,25 +96,28 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="row in JSON.parse(selectedfile)">
+                <tr v-for="row in form">
+                    
                     <td>
-                            {{row.boekjaar}}
+                    <input type="number" v-model="row.boekjaar">  
                     </td>
                     <td>
-                            {{row.week}}
+                    <input type="number" v-model="row.week"> 
                     </td>
                     <td>
-                            {{row.datum}}
+                    <input type="date" v-model="row.datum"> 
                     </td>
                     <td>
-                            {{row.persnr}}
+                    <input type="number" v-model="row.persnr"> 
                     </td>
                     <td>
-                            {{row.uren}}
+                    <input type="number" v-model="row.uren"> 
+                    remember the commas
                     </td>
                     <td>
-                            {{row.uurcode}}
+                    <input type="text" v-model="row.uurcode"> 
                     </td>
+                    <td><button>Submit</button></td>
                 </tr>
             </tbody>
         </table>
