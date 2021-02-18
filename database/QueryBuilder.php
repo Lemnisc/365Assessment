@@ -74,8 +74,6 @@ class QueryBuilder
         try {
             $statement = $this->pdo->prepare($sql);
             $statement->execute();
-            // die(print_r($sql));
-            // return $statement->fetchAll(PDO::FETCH_CLASS);
         } catch (Exception $error) {
             die('Could not delete from database. Error: ' . $error->getMessage());
         }

@@ -23,7 +23,9 @@
 
     <div id="vue">
         <files-table files='<?= json_encode($files) ?>'></files-table>
-        <file-table selectedfile='<?= json_encode($selectedFile) ?>'></file-table>
+        <div v-if="'<?=$file->selectedFile?>'!=''">
+        <file-table selectedfile='<?= json_encode($file->selectedFile) ?>'></file-table>
+        </div>
     </div>
 </body>
 
