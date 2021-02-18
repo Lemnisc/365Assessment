@@ -40,10 +40,6 @@
             files: JSON
         },
         methods: {
-            doDelete(id){
-                alert(id);
-                window.location.href="/files.php?delete=" + id;
-            }
         },
         template: `
         <table>
@@ -60,9 +56,9 @@
                             {{file.filename}}</a>
                     </td>
                     <td>
-                        <form method="GET">
-                            <a :href="'/files.php?download=' + file.file_id" type="submit">Download</a>
-                            <button @click.prevent=doDelete(file.file_id)>Verwijderen</button >
+                        <form method="POST">
+                            <button :value="file.file_id" name=download>Download</button>
+                            <button :value="file.file_id" name=delete>Verwijderen</button >
                         </form>
                     </td>
                 </tr>

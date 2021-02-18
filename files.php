@@ -44,6 +44,23 @@ class File
             $this->getFile($_GET['file']);
         }
     }
+
+    public function handlePostRequest()
+    {
+        if(isset($_FILES['file-upload'])){
+            $this->doFileUpload();
+            header('Location: ' . '/files.php');
+            die();
+        }
+
+        if (isset($_REQUEST['download'])) {
+            $this->doDownload($_REQUEST['download']);
+        }
+        if (isset($_REQUEST['delete'])) {
+            $this->doDelete($_REQUEST['delete']);
+        }
+    }
+
     public function doDownload($id)
     {
         $columns = [
@@ -71,6 +88,7 @@ class File
     {
         $this->app['database']->deleteByColumnValue('files', 'file_id', $id);
         header('Location: ' . '/files.php');
+        die();
     }
 
     public function doFileUpload()
@@ -126,7 +144,7 @@ $files = $file->getFileList();
 
 // If a file is posted, upload it to the database
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $file->doFileUpload();
+    $file->handlePostRequest();
 }
 
 if ($_REQUEST) {
