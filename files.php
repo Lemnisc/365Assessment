@@ -43,6 +43,12 @@ if ($_REQUEST) {
         exit;
     }
 
+
+    
+    if (isset($_GET['delete'])) {
+        $app['database']->deleteByColumnValue('files', 'file_id', $_GET['delete']);
+    }
+
     if (isset($_GET['file'])) {
         $selectedFile = $app['database']->getWhereKeyIsValue('files', 'file_id', $_GET['file']);
     }
@@ -64,6 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Find the highest file_id in the table, to increment for the new file
     // NOTE: This will give issues when users upload files at the same time, but using a framework properly would help. Or uploading the files as blobs, instead of as data in the database
+    // die(print_r($app['database']->getMaxFromColumn('files', 'file_id')));
     $newIndex = 1 + $app['database']->getMaxFromColumn('files', 'file_id');
     // Insert each line into database
     // while (!feof($file)) { // Can't do it like this: It reads the end-of-file character too, so we have to stop right before, like so:

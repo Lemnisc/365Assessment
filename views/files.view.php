@@ -37,7 +37,12 @@
         props: {
             files: JSON
         },
-
+        methods: {
+            doDelete(id){
+                alert(id);
+                window.location.href="/files.php?delete=" + id;
+            }
+        },
         template: `
         <table>
             <thead>
@@ -55,7 +60,7 @@
                     <td>
                         <form method="GET">
                             <a :href="'/files.php?download=' + file.file_id" type="submit">Download</a>
-                            <button>Verwijderen</button>
+                            <button @click.prevent=doDelete(file.file_id)>Verwijderen</button >
                         </form>
                     </td>
                 </tr>

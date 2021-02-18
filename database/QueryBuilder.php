@@ -67,6 +67,19 @@ class QueryBuilder
             die('Could not get from database. Error: ' . $error->getMessage());
         }
     }
+
+    public function deleteByColumnValue($table, $column, $value)
+    {
+        $sql = sprintf('delete from %s where %s = "%s"', $table, $column, $value);
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute();
+            // die(print_r($sql));
+            // return $statement->fetchAll(PDO::FETCH_CLASS);
+        } catch (Exception $error) {
+            die('Could not delete from database. Error: ' . $error->getMessage());
+        }
+    }
     
     public function getColumnsWhereKeyIsValue($table, $key, $value, $columns)
     {
