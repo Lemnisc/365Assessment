@@ -27,6 +27,19 @@ class QueryBuilder
         }
     }
 
+    public function getMaxFromColumn($table, $column)
+    {
+        $sql = sprintf('select max(%s) as max_value from %s', $column, $table);
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute();
+            $max_value = $statement->fetch(PDO::FETCH_ASSOC)['max_value'];
+            return $max_value;
+        } catch (Exception $error) {
+            die('Could not select from database. Error: ' . $error->getMessage());
+        }
+    }
+
     public function insert($table, $parameters)
     {
         $sql = sprintf(
@@ -35,7 +48,6 @@ class QueryBuilder
             implode(', ', array_keys($parameters)),
             ':' . implode(', :', array_keys($parameters))
         );
-        die($sql);
         try {
             $statement = $this->pdo->prepare($sql);
             $statement->execute($parameters);

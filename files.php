@@ -31,28 +31,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_SESSION['id'];
     // Get filename of uploaded file
     // Note: can upload different files with the same filename
-    $file_name =  $_FILES['file-upload']['name'];
+    $filename =  $_FILES['file-upload']['name'];
 
     $file = fopen($_FILES['file-upload']['tmp_name'], 'r');
 
-    $headers = explode(";", fgetcsv($file)[0]);
+    $headers = explode(";", fgetcsv($file, ';')[0]);
 
-    while (!feof($file)) {
-        // Insert line into database
-        // print_r(fgetcsv($file));
-        $data = explode(";", fgetcsv($file)[0]);
-        $data = $data . ',null';
+    // Find the highest file_id in the table, to increment for the new file
+    // NOTE: This will give issues when users upload files at the same time, but using a framework properly would help. Or uploading the files as blobs, instead of as data in the database
+    $newIndex = 1 + $app['database']->getMaxFromColumn('files', 'file_id');
 
-        $headers = ['foo', 'bar', 'bax'];
-        $data = [1,2,3];
-        print_r($headers);
-        print_r($data);
-        $line = ['user_id' => $user_id, 'file_id'=>3, 'filename'=>$file_name, $data];
-        $line = implode(',',$line);
+    // Insert each line into database
+    // while (!feof($file)) { // Can't do it like this: It reads the end-of-file character too, so we have to stop right before, like so:
+    while (($character = fgetc($file)) !== false) {
+
+        // Read the line from the file
+        $data = fgetcsv($file, 1000, ';');
+        // Give it the proper headers
         $combined = array_combine($headers, $data);
-        die(print_r($combined));
-        // do header: data, header:data
-        $app['database']->insert('files', $line);
+        // Add the ones that aren't in the file
+        $combined['user_id'] = $user_id;
+        $combined['filename'] = $filename;
+        // TODO: give a proper file_id
+        $app['database']->getMaxFromColumn('files', 'file_id');
+        $combined['file_id'] = $newIndex;
+        // Parse the date
+        $mysqlDate = date('Y-m-d', strtotime($data[2]));
+        $combined['Datum'] = $mysqlDate;
+
+        // Finally, insert it into the database
+        $app['database']->insert('files', $combined);
     }
 
     fclose($file);
