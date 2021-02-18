@@ -37,7 +37,7 @@ if ($_REQUEST) {
             $row = (array)$value;
             $date = date('d/m/Y', strtotime($row['Datum']));
             $row['Datum'] = $date;
-            fputcsv($file, (array)$value, ';');
+            fputcsv($file, (array)$row, ';');
         }
         fclose($file);
         exit;
