@@ -67,4 +67,16 @@ class QueryBuilder
             die('Could not get from database. Error: ' . $error->getMessage());
         }
     }
+    
+    public function getColumnsWhereKeyIsValue($table, $key, $value, $columns)
+    {
+        $sql = sprintf('select %s from %s where %s = "%s"', implode(', ', array_values($columns)), $table, $key, $value);
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_OBJ);
+        } catch (Exception $error) {
+            die('Could not get from database. Error: ' . $error->getMessage());
+        }
+    }
 }

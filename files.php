@@ -21,7 +21,31 @@ $files = array_unique($files, SORT_REGULAR);
 
 // Get the file for displaying, if selected
 if ($_REQUEST) {
-    $selectedFile = $app['database']->getWhereKeyIsValue('files', 'file_id', $_GET['file']);
+    if (isset($_GET['download'])) {
+        $columns = [
+            'Boekjaar', 'Week', 'Datum', 'Persnr', 'Uren', 'Uurcode',
+        ];
+        $data = $app['database']->getColumnsWhereKeyIsValue('files', 'file_id', $_GET['download'], $columns);
+        $filename = $app['database']->getColumnsWhereKeyIsValue('files', 'file_id', $_GET['download'], ['filename'])[0]->filename;
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename=' . $filename);
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns, ';');
+
+        foreach ($data as $row => $value) {
+            $row = (array)$value;
+            $date = date('d/m/Y', strtotime($row['Datum']));
+            $row['Datum'] = $date;
+            fputcsv($file, (array)$value, ';');
+        }
+        fclose($file);
+        exit;
+    }
+
+    if (isset($_GET['file'])) {
+        $selectedFile = $app['database']->getWhereKeyIsValue('files', 'file_id', $_GET['file']);
+    }
 }
 
 // TODO check file ownership
@@ -41,12 +65,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Find the highest file_id in the table, to increment for the new file
     // NOTE: This will give issues when users upload files at the same time, but using a framework properly would help. Or uploading the files as blobs, instead of as data in the database
     $newIndex = 1 + $app['database']->getMaxFromColumn('files', 'file_id');
-
     // Insert each line into database
     // while (!feof($file)) { // Can't do it like this: It reads the end-of-file character too, so we have to stop right before, like so:
-    while (fgetc($file) !== false) {
+    while (($character = fgetc($file)) !== false) {
         // Read the line from the file
         $data = fgetcsv($file, 1000, ';');
+        // Make sure to append the character we used to check for eof
+        $data[0] = $character . $data[0];
         // Give it the proper headers
         $combined = array_combine($headers, $data);
         // Add the fields that aren't in the file:

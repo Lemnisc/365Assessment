@@ -30,7 +30,7 @@
 <script>
     const {
         createApp,
-        h
+        
     } = Vue
     const app = createApp({})
     app.component('files-table', {
@@ -53,8 +53,10 @@
                             {{file.filename}}</a>
                     </td>
                     <td>
-                        <button>Download</button>
-                        <button>Verwijderen</button>
+                        <form method="GET">
+                            <a :href="'/files.php?download=' + file.file_id" type="submit">Download</a>
+                            <button>Verwijderen</button>
+                        </form>
                     </td>
                 </tr>
             </tbody>
