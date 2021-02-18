@@ -23,6 +23,7 @@ $files = array_unique($files, SORT_REGULAR);
 if ($_REQUEST) {
     $selectedFile = $app['database']->getWhereKeyIsValue('files', 'file_id', $_GET['file']);
 }
+
 // TODO check file ownership
 
 // If a file is posted, upload it to the database
@@ -43,19 +44,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insert each line into database
     // while (!feof($file)) { // Can't do it like this: It reads the end-of-file character too, so we have to stop right before, like so:
-    while (($character = fgetc($file)) !== false) {
-
+    while (fgetc($file) !== false) {
         // Read the line from the file
         $data = fgetcsv($file, 1000, ';');
         // Give it the proper headers
         $combined = array_combine($headers, $data);
-        // Add the ones that aren't in the file
+        // Add the fields that aren't in the file:
         $combined['user_id'] = $user_id;
         $combined['filename'] = $filename;
-        // TODO: give a proper file_id
-        $app['database']->getMaxFromColumn('files', 'file_id');
+        // Give it the proper file_id:
         $combined['file_id'] = $newIndex;
-        // Parse the date
+        // Parse and give it the date:
         $mysqlDate = date('Y-m-d', strtotime($data[2]));
         $combined['Datum'] = $mysqlDate;
 
