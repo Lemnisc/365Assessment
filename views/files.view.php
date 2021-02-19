@@ -111,8 +111,7 @@
                     <input type="number" v-model="row.persnr"> 
                     </td>
                     <td>
-                    <input type="number" v-model="row.uren"> 
-                    remember the commas
+                    <input type="number" step='0.01' v-model="row.uren"> 
                     </td>
                     <td>
                     <input type="text" v-model="row.uurcode"> 

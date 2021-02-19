@@ -47,7 +47,7 @@ class File
 
     public function handlePostRequest()
     {
-        if(isset($_FILES['file-upload'])){
+        if (isset($_FILES['file-upload'])) {
             $this->doFileUpload();
             header('Location: ' . '/files.php');
             die();
@@ -79,8 +79,11 @@ class File
 
         foreach ($data as $row => $value) {
             $row = (array)$value;
+            // Format the date as it was
             $date = date('d/m/Y', strtotime($row['Datum']));
             $row['Datum'] = $date;
+            // Format the hours as it was
+            $row['Uren'] = str_replace('.',',',$row['Uren']);
             fputcsv($file, (array)$row, ';');
         }
         fclose($file);
@@ -127,7 +130,8 @@ class File
             // Parse and give it the date:
             $mysqlDate = date('Y-m-d', strtotime($data[2]));
             $combined['Datum'] = $mysqlDate;
-
+            // Replace the comma in the hours number with a period, to adhere to the standard
+            $combined['Uren'] = str_replace(',', '.', $combined['Uren']);
             // Finally, insert it into the database
             $this->app['database']->insert('files', $combined);
         }
