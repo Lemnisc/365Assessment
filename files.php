@@ -80,8 +80,7 @@ class File
         foreach ($data as $row => $value) {
             $row = (array)$value;
             // Format the date as it was
-            $date = date('d/m/Y', strtotime($row['Datum']));
-            $row['Datum'] = $date;
+            $row['Datum'] = date('d/m/Y', strtotime($row['Datum']));
             // Format the hours as it was
             $row['Uren'] = str_replace('.',',',$row['Uren']);
             fputcsv($file, (array)$row, ';');
