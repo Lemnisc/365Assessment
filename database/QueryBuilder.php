@@ -56,6 +56,28 @@ class QueryBuilder
         }
     }
 
+    public function updateRowWhereColumnIsValue($table, $parameters, $column_name, $column_value)
+    {
+        $updatables = "";
+        foreach ($parameters as $key => $value) {
+            $updatables = $updatables . $key . '=' . $value . ', ';
+        }
+        $updatables = rtrim($updatables, ', ');
+        $sql = sprintf(
+            'update %s set %s where %s = %s',
+            $table,
+            $updatables,
+            $column_name,
+            $column_value
+        );
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute($parameters);
+        } catch (Exception $error) {
+            die('Could not insert into database. Error: ' . $error->getMessage());
+        }
+    }
+
     public function getWhereKeyIsValue($table, $key, $value)
     {
         $sql = sprintf('select * from %s where %s = "%s"', $table, $key, $value);

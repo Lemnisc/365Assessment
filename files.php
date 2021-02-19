@@ -62,8 +62,27 @@ class File
         if (isset($_REQUEST['edit'])) {
             $this->getFile($_REQUEST['edit']);
         }
+        if (isset($_REQUEST['update'])) {
+            $this->doUpdate($_REQUEST['update']);
+        }
     }
-
+    public function doUpdate($rows)
+    {
+        $data = json_decode($rows, TRUE);
+        foreach ($data as $row) {
+            $id_column = 'id';
+            $id_value = $row['id'];
+            $table = 'files';
+            $parameters['boekjaar'] = $row['boekjaar'];
+            $parameters['week'] = $row['week'];
+            $parameters['datum'] = $row['datum'];
+            $parameters['persnr'] = $row['persnr'];
+            $parameters['uren'] = str_replace(',', '.', $row['uren']);
+            $parameters['uurcode'] = '"'.$row['uurcode'].'"';
+            $this->app['database']->updateRowWhereColumnIsValue($table, $parameters, $id_column, $id_value);
+        }
+        die();
+    }
     public function doDownload($id)
     {
         $columns = [
@@ -82,7 +101,7 @@ class File
             // Format the date as it was
             $row['Datum'] = date('d/m/Y', strtotime($row['Datum']));
             // Format the hours as it was
-            $row['Uren'] = str_replace('.',',',$row['Uren']);
+            $row['Uren'] = str_replace('.', ',', $row['Uren']);
             fputcsv($file, (array)$row, ';');
         }
         fclose($file);

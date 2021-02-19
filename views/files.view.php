@@ -13,6 +13,7 @@
 
     <h1>Bestanden</h1>
     <h1><a href="/auth/logout.php">Log out</a></h1>
+    <h1><a href="/files.php">Bestanden</a></h1>
 
     <form method="post" action="files.php" enctype="multipart/form-data">
         <label for="file-upload">Upload een nieuw bestand:</label>
@@ -74,17 +75,32 @@
             return {
                 editing: [],
                 form: JSON.parse(this.selectedfile),
+                oldForm: JSON.parse(this.selectedfile),
+                changedRows: new Set(),
             }
         },
         methods: {
-            editCell(data) {
-                this.form = data;
-                console.log(this.form);
-            }
+            addChangedRow(id) {
+                this.changedRows.add(id);
+            },
+            handleUpdate() {
+                const rowsToUpdate = new FormData();
+                const datata=[];
+                for (let id of this.changedRows) {
+                    datata.push(this.form.find(row => row.id === id))
+                }
+                rowsToUpdate.append('update', JSON.stringify(datata));
+                fetch("/files.php", {
+                    method: "POST",
+                    body: rowsToUpdate
+                })
+            },
         },
-        // <tr v-for="row in JSON.parse(selectedfile)" @click.prevent="editCell(JSON.parse(selectedfile))">
+        computed: {},
+
         template: `
         <table>
+            <button @click=handleUpdate()>Submit changes</button>
             <thead>
                 <tr>
                     <td>Boekjaar</td>
@@ -97,26 +113,24 @@
             </thead>
             <tbody>
                 <tr v-for="row in form">
-                    
                     <td>
-                    <input type="number" v-model="row.boekjaar">  
+                    <input type="number" v-model="row.boekjaar" v-on:change="addChangedRow(row.id)">  
                     </td>
                     <td>
-                    <input type="number" v-model="row.week"> 
+                    <input type="number" v-model="row.week" v-on:change="addChangedRow(row.id)"> 
                     </td>
                     <td>
-                    <input type="date" v-model="row.datum"> 
+                    <input type="date" v-model="row.datum" v-on:change="addChangedRow(row.id)">
                     </td>
                     <td>
-                    <input type="number" v-model="row.persnr"> 
+                    <input type="number" v-model="row.persnr" v-on:change="addChangedRow(row.id)">
                     </td>
                     <td>
-                    <input type="number" step='0.01' v-model="row.uren"> 
+                    <input type="number" step='0.01' v-model="row.uren" v-on:change="addChangedRow(row.id)">
                     </td>
                     <td>
-                    <input type="text" v-model="row.uurcode"> 
+                    <input type="text" v-model="row.uurcode" v-on:change="addChangedRow(row.id)">
                     </td>
-                    <td><button>Submit</button></td>
                 </tr>
             </tbody>
         </table>

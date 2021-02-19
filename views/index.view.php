@@ -19,9 +19,9 @@ require './config.php'
 
     <h1>Index</h1>
     <h1><a href="/auth/logout.php">Log out</a></h1>
-    <?= $config['site_root'] ?>
+    <h1><a href="/files.php">Bestanden</a></h1>
     <div id="vue">
-        <users-table users='<?= json_encode($users) ?>'></users-table>
+        <!-- <users-table users='<?= json_encode($users) ?>'></users-table> -->
     </div>
 
 </body>
